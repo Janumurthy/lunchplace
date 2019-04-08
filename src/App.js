@@ -7,17 +7,32 @@ class App extends Component {
     super(props);
     this.state={
       searchInput:'',
-      recommendations:[]
+	  recommendations:[],
+	  participants:[],
+	  name:'',
+	  optVenue:''
     }
-    this.onInput = this.onInput.bind(this);
-    this.onSearch = this.onSearch.bind(this);
+    this.onChange = this.onChange.bind(this);
+	this.onSearch = this.onSearch.bind(this);
+	this.addParticipant = this.addParticipant.bind(this);
   }
 
 
-  onInput(e){
+  onChange(e){
     this.setState({
-      searchInput:e.target.value
+      [e.target.name]:e.target.value
     })
+  }
+
+  addParticipant(){
+	  const participantsArr = this.state.participants;
+	  participantsArr.push({
+		name:this.state.name,
+		option:this.state.optVenue
+	  })
+	  this.setState({
+		  participants:participantsArr
+	  })
   }
 
   onSearch(){
@@ -83,47 +98,85 @@ class App extends Component {
 }
   
   render() {
-    console.log(this.state.recommendations);
+	console.log(this.state.recommendations);
+	console.log(this.state.participants);
     return (
 		<div className="uk-container uk-fex uk-flex-center uk-padding App">
 			<div>
-        <h2>Lunch Place</h2>
-        <p>Choose a venue for lunch, highest votes is your lunch destination today!.</p>
+				<h2>Lunch Place</h2>
+				<p>Choose a venue for lunch, highest votes is your lunch destination today!.</p>
 				<div className="search-box uk-flex uk-flex-center">
-          <div className="uk-search uk-search-default uk-flex uk-width-1-3">
-				  	<input className="uk-search-input" type="search"  value={this.state.searchInput} placeholder="Where?" onChange={this.onInput} />
+					<div className="uk-search uk-search-default uk-flex uk-width-1-3">
+						<input className="uk-search-input" type="search" name="searchInput" value={this.state.searchInput} placeholder="Where?" onChange={this.onChange} />
 						<button type="submit" onClick={this.onSearch} className="uk-button uk-button-primary">Search</button>
+					</div>
+				</div>
+				{this.state.recommendations.length ? 
+					<div className="searchResults uk-flex uk-flex-center">
+						<div>
+							<table className="uk-table uk-width-5-6">
+								<thead>
+									<tr>
+										<th>Participants</th>
+										{this.state.recommendations.map((venue,i) => 
+										(
+										<th key={i}>
+										{venue.url ?
+										<h2><a href={venue.url} target="_blank">{venue.name}</a>	</h2>
+										:
+										<h2>{venue.name}</h2>
+										}
+										{venue.category ?
+											<p>{venue.category}</p>
+											: null
+										}
+										{venue.rating ?
+											<p>{venue.rating}</p>
+											: null
+										}
+										</th>
+										))}
+									</tr>
+								</thead>
+								<tbody>
+									{this.state.participants.length ? this.state.participants.map((participant,i) => (
+										<tr>
+											<td>
+												<p>{participant.name}</p>
+											</td>
+											{this.state.recommendations.map((venue,i)=>(
+												<td>{i==participant.option ? 'Yes' : 'No'}</td>
+											))}
+										</tr>
+									)):''}
+									<tr>
+										<td>
+											<input className="uk-width-1-1" type="text" name="name" defaultValue='' value={this.state.name} placeholder="" onChange={this.onChange}/>
+										</td>
+										<td>
+											<div class="radio">
+												<input type="radio" id='0' name="optVenue" value="0" onChange={this.onChange}/>
+											</div>
+										</td>
+										<td>
+											<div class="radio">
+												<input type="radio" id='1' name="optVenue"  value="1" onChange={this.onChange}/>
+											</div>
+										</td>
+										<td>
+											<div class="radio">
+												<input type="radio" id='2' name="optVenue"  value="2" onChange={this.onChange}/>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<button type="button" className="uk-button uk-button-secondary" onClick={this.addParticipant}>Add Participant</button>
 						</div>
 					</div>
-				<div className="searchResults uk-flex uk-flex-center">
-					<table className="uk-table uk-width-5-6">
-						<thead>
-							<tr>
-								{this.state.recommendations.map((venue,i) => 
-								(
-								<th>
-									<h2>{venue.name}</h2>
-									{venue.category ?
-										<p>{venue.category}</p>
-										: null
-									}
-									{venue.rating ?
-										<p>{venue.rating}</p>
-										: null
-									}
-								</th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+				:
+				''
+				}
 			</div>
 		</div>
 	);
