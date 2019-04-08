@@ -7,10 +7,10 @@ class App extends Component {
     super(props);
     this.state={
       searchInput:'',
-	  recommendations:[],
-	  participants:[],
-	  name:'',
-	  optVenue:''
+			recommendations:[],
+			participants:[],
+			name:'',
+			optVenue:''
     }
     this.onChange = this.onChange.bind(this);
 	this.onSearch = this.onSearch.bind(this);
@@ -25,13 +25,25 @@ class App extends Component {
   }
 
   addParticipant(){
-	  const participantsArr = this.state.participants;
+		const participantsArr = this.state.participants;
 	  participantsArr.push({
-		name:this.state.name,
-		option:this.state.optVenue
-	  })
+			name:this.state.name,
+			option:this.state.optVenue
+		})
+		/*Update the optedBy for each venue based on the options chosen by participants */
+		this.state.recommendations.map((venue,i) => {
+			console.log(i)
+			this.state.participants.forEach(participant => {
+				console.log(participant.option);
+				if(participant.option == i){
+					venue.optedBy+=1;
+					console.log(venue.optedBy);
+				}
+			});
+		});
+		console.log(this.state.recommendations);
 	  this.setState({
-		  participants:participantsArr
+			participants:participantsArr
 	  })
   }
 
@@ -74,7 +86,8 @@ class App extends Component {
 							'name': venue.name,
 							'category': venueResponse.categories[0] ? venueResponse.categories[0].name : '', 
 							'url': venueResponse.url,
-							'rating': venueResponse.rating
+							'rating': venueResponse.rating,
+							'optedBy':0
 						});
 						console.log(venues);
 						this.setState({
