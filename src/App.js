@@ -49,7 +49,8 @@ class App extends Component {
 
   onSearch(){
       //Nullify state for every search to avoid concantenation of results*/
-      this.state.recommendations=[];
+			this.state.recommendations=[];
+			this.state.participants=[];
       const params={
           client_id:'SXRAZRB5WMNUECIOO2CU0YSWT1RK4ZECXSTLWSVPWIFRCQSE' ,
           client_secret:'IE3NIO4PNHDB3X52J5VB5Y15MSKE2IUZQ4FD2ZUL4ZFOOUWN',
@@ -111,8 +112,6 @@ class App extends Component {
 }
   
   render() {
-	console.log(this.state.recommendations);
-	console.log(this.state.participants);
     return (
 		<div className="uk-container uk-fex uk-flex-center uk-padding App">
 			<div>
@@ -147,6 +146,10 @@ class App extends Component {
 											<p>{venue.rating}</p>
 											: null
 										}
+										{venue.winner ?
+											<p >Winner </p>
+											: null
+										}
 										</th>
 										))}
 									</tr>
@@ -164,7 +167,7 @@ class App extends Component {
 									)):''}
 									<tr>
 										<td>
-											<input className="uk-width-1-1" type="text" name="name" defaultValue='' value={this.state.name} placeholder="" onChange={this.onChange}/>
+											<input className="uk-width-1-1" type="text" name="name" value={this.state.name} placeholder="" onChange={this.onChange}/>
 										</td>
 										<td>
 											<div class="radio">
