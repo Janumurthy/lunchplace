@@ -1,3 +1,5 @@
+@import "./../node_modules/uikit/dist/css/uikit.min.css";
+
 .App {
   text-align: center;
 }
@@ -21,6 +23,10 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.uk-table th{
+  vertical-align:top;
 }
 
 @keyframes App-logo-spin {
